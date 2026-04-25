@@ -15,7 +15,7 @@
     "price_ok": true
   },
   "execution": {
-    "executed_at": "2026-04-25T11:01:49.001479",
+    "executed_at": "2026-04-25T11:05:16.906650",
     "result": "FAILED",
     "details": "('Key ID must be given to access Alpaca trade API', ' (env: APCA_API_KEY_ID)')",
     "mode": "true"
