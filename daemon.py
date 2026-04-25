@@ -25,8 +25,18 @@ os.makedirs(os.path.join(REPO_PATH, 'skills'), exist_ok=True)
 # Cargar secrets (.env local)
 load_dotenv(os.path.join(REPO_PATH, '.env'))
 
+# Mapear llaves asegurando compatibilidad con la librería Alpaca
 ALPACA_API_KEY = os.getenv('ALPACA_API_KEY')
 ALPACA_SECRET_KEY = os.getenv('ALPACA_SECRET_KEY')
+
+if not ALPACA_API_KEY or not ALPACA_SECRET_KEY:
+    print(f"[{datetime.now()}] ⚠️ ERROR: No se detectaron las credenciales en el archivo .env")
+    print(f"Asegúrate de que el archivo .env existe en {REPO_PATH} y tiene las llaves configuradas.")
+else:
+    # Inyectar explícitamente en el entorno para la librería
+    os.environ['APCA_API_KEY_ID'] = ALPACA_API_KEY
+    os.environ['APCA_API_SECRET_KEY'] = ALPACA_SECRET_KEY
+
 MODE = os.getenv('ALPACA_PAPER', 'true').lower()
 
 BASE_URL = 'https://paper-api.alpaca.markets' if MODE == 'true' else 'https://api.alpaca.markets'
