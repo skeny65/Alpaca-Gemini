@@ -109,7 +109,7 @@ def count_trades_this_week():
     log_path = os.path.join(REPO_PATH, 'memory', 'TRADE-LOG.md')
     if not os.path.exists(log_path):
         return 0
-    with open(log_path, 'r') as f:
+    with open(log_path, 'r', encoding='utf-8') as f:
         content = f.read()
     trades = [line for line in content.split('\n') if line.startswith('##') and 'EXECUTED' in line]
     return len(trades)

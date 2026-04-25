@@ -6,7 +6,7 @@
   "rationale": "Ejecuci\u00f3n end-to-end: Corrigiendo carga de credenciales y forzando re-intento de compra.",
   "confidence": "HIGH",
   "source_urls": [],
-  "status": "FAILED",
+  "status": "PROCESSED",
   "expires_at": "2026-04-25T23:59:59-05:00",
   "guardrails_check": {
     "weekly_trades": 0,
@@ -15,9 +15,14 @@
     "price_ok": true
   },
   "execution": {
-    "executed_at": "2026-04-25T11:19:49.212275",
-    "result": "FAILED",
-    "details": "'charmap' codec can't decode byte 0x9d in position 282: character maps to <undefined>",
+    "executed_at": "2026-04-25T11:21:36.131192",
+    "result": "SUCCESS",
+    "details": {
+      "order_id": "6f40dd20-2953-459f-bf3e-57622cf7ceae",
+      "qty": 18,
+      "price": 270.83,
+      "mode": "true"
+    },
     "mode": "true"
   }
 }
