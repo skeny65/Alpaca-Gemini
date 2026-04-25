@@ -34,3 +34,12 @@
 **Price:** $270.83
 **Mode:** true
 **Status:** ✅ FILLED
+
+## 2026-04-25 11:26 CT | EXECUTED | MSFT | BUY
+**Signal Source:** TEST_AUTO_EXECUTION_2
+**Rationale:** Segunda prueba end-to-end: Validando la ejecución consecutiva con un activo diferente (MSFT).
+**Order ID:** e33ca2a2-3a10-4f90-8f23-a43af921c9d4
+**Qty:** 11
+**Price:** $424.01
+**Mode:** true
+**Status:** ✅ FILLED

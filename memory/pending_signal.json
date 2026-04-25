@@ -1,26 +1,26 @@
 {
-  "timestamp": "2026-04-25T11:05:00-05:00",
-  "routine": "TEST_AUTO_EXECUTION",
-  "asset": "AAPL",
+  "timestamp": "2026-04-25T11:30:00-05:00",
+  "routine": "TEST_AUTO_EXECUTION_2",
+  "asset": "MSFT",
   "action": "BUY",
-  "rationale": "Ejecuci\u00f3n end-to-end: Corrigiendo carga de credenciales y forzando re-intento de compra.",
+  "rationale": "Segunda prueba end-to-end: Validando la ejecuci\u00f3n consecutiva con un activo diferente (MSFT).",
   "confidence": "HIGH",
   "source_urls": [],
   "status": "PROCESSED",
   "expires_at": "2026-04-25T23:59:59-05:00",
   "guardrails_check": {
-    "weekly_trades": 0,
+    "weekly_trades": 1,
     "max_trades_ok": true,
     "universe_ok": true,
     "price_ok": true
   },
   "execution": {
-    "executed_at": "2026-04-25T11:21:36.131192",
+    "executed_at": "2026-04-25T11:26:50.002915",
     "result": "SUCCESS",
     "details": {
-      "order_id": "6f40dd20-2953-459f-bf3e-57622cf7ceae",
-      "qty": 18,
-      "price": 270.83,
+      "order_id": "e33ca2a2-3a10-4f90-8f23-a43af921c9d4",
+      "qty": 11,
+      "price": 424.01,
       "mode": "true"
     },
     "mode": "true"
