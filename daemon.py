@@ -18,6 +18,10 @@ import alpaca_trade_api as tradeapi
 REPO_PATH = os.path.dirname(os.path.abspath(__file__)) 
 CHECK_INTERVAL = 60  # segundos entre checks
 
+# Asegurar que la estructura de carpetas existe
+os.makedirs(os.path.join(REPO_PATH, 'memory'), exist_ok=True)
+os.makedirs(os.path.join(REPO_PATH, 'skills'), exist_ok=True)
+
 # Cargar secrets (.env local)
 load_dotenv(os.path.join(REPO_PATH, '.env'))
 
@@ -60,7 +64,7 @@ def git_push(message):
 # ─── FUNCIONES ALPACA ───
 
 def get_api():
-    return tradeapi.REST(ALPACA_API_KEY, ALPACA_SECRET_KEY, base_url=BASE_URL)
+    return tradeapi.REST(key_id=ALPACA_API_KEY, secret_key=ALPACA_SECRET_KEY, base_url=BASE_URL)
 
 def calculate_position_size(account, symbol):
     portfolio_value = float(account.portfolio_value)
@@ -125,10 +129,39 @@ def execute_trade(signal_data):
         return False, str(e)
 
 def main():
+    # Configura la salida de consola para soportar UTF-8 (Emojis) en Windows
+    if sys.platform == "win32":
+        sys.stdout.reconfigure(encoding='utf-8')
+
     print(f"[{datetime.now()}] 🚀 Trading Daemon started")
     print(f"[{datetime.now()}] Mode: {MODE}")
     print(f"[{datetime.now()}] Checking every {CHECK_INTERVAL}s")
     
+    # Ensure pending_signal.json exists and is valid JSON, or initialize it
+    signal_path = os.path.join(REPO_PATH, 'memory', 'pending_signal.json')
+    if not os.path.exists(signal_path) or os.path.getsize(signal_path) == 0:
+        print(f"[{datetime.now()}] 🛠️ Inicializando {signal_path} con estado 'WAITING' por defecto.")
+        default_signal = {
+            "timestamp": datetime.now().isoformat(),
+            "routine": "SYSTEM_INIT",
+            "asset": "NONE",
+            "action": "HOLD",
+            "rationale": "Sistema inicializado. Esperando señal del Oráculo.",
+            "confidence": "N/A",
+            "source_urls": [],
+            "status": "WAITING",
+            "expires_at": (datetime.now().replace(hour=23, minute=59, second=59, microsecond=0)).isoformat(), # Expires end of today
+            "guardrails_check": {
+                "weekly_trades": 0,
+                "max_trades_ok": True,
+                "universe_ok": True,
+                "price_ok": True
+            }
+        }
+        with open(signal_path, 'w', encoding='utf-8') as f:
+            json.dump(default_signal, f, indent=2)
+        git_push("System: Initialized memory/pending_signal.json with default WAITING state.")
+
     while True:
         try:
             # 1. Pull latest from GitHub
@@ -137,15 +170,17 @@ def main():
             # 2. Leer señal pendiente (en la carpeta memory según tu diseño)
             signal_path = os.path.join(REPO_PATH, 'memory', 'pending_signal.json')
             
-            if not os.path.exists(signal_path):
+            try:
+                with open(signal_path, 'r', encoding='utf-8') as f:
+                    signal_data = json.load(f)
+            except (FileNotFoundError, json.JSONDecodeError) as e:
+                print(f"[{datetime.now()}] ❌ Error al leer o decodificar {signal_path}: {e}. El archivo puede estar ausente, vacío o mal formado.")
                 time.sleep(CHECK_INTERVAL)
                 continue
             
-            with open(signal_path) as f:
-                signal_data = json.load(f)
-            
             # 3. Verificar si hay señal PENDING
             if signal_data.get('status') != 'PENDING':
+                print(f"[{datetime.now()}] 😴 Estado actual: {signal_data.get('status')}. Esperando PENDING...")
                 time.sleep(CHECK_INTERVAL)
                 continue
             
@@ -156,7 +191,7 @@ def main():
                 expires = datetime.fromisoformat(exp_str)
                 if expires.timestamp() < datetime.now().timestamp():
                     signal_data['status'] = 'EXPIRED'
-                    with open(signal_path, 'w') as f:
+                    with open(signal_path, 'w', encoding='utf-8') as f:
                         json.dump(signal_data, f, indent=2)
                     git_push(f"Signal expired: {signal_data['asset']}")
                     print(f"[{datetime.now()}] ⚠️ Signal expired")
@@ -176,7 +211,7 @@ def main():
                 'mode': MODE
             }
             
-            with open(signal_path, 'w') as f:
+            with open(signal_path, 'w', encoding='utf-8') as f:
                 json.dump(signal_data, f, indent=2)
             
             # 7. Escribir en TRADE-LOG.md (Auditoría completa)
@@ -191,7 +226,7 @@ def main():
                 f"**Mode:** {MODE}\n"
                 f"**Status:** {'✅ FILLED' if success else f'❌ ERROR: {result}'}\n"
             )
-            with open(log_path, 'a') as f:
+            with open(log_path, 'a', encoding='utf-8') as f:
                 f.write(log_entry)
             
             # 8. Push a GitHub

@@ -1,0 +1,23 @@
+{
+  "timestamp": "2026-04-25T11:05:00-05:00",
+  "routine": "TEST_AUTO_EXECUTION",
+  "asset": "AAPL",
+  "action": "BUY",
+  "rationale": "Prueba end-to-end: Validando que el daemon detecte y ejecute la se\u00c3\u00b1al en la subcarpeta memory/.",
+  "confidence": "HIGH",
+  "source_urls": [],
+  "status": "FAILED",
+  "expires_at": "2026-04-25T23:59:59-05:00",
+  "guardrails_check": {
+    "weekly_trades": 0,
+    "max_trades_ok": true,
+    "universe_ok": true,
+    "price_ok": true
+  },
+  "execution": {
+    "executed_at": "2026-04-25T11:01:49.001479",
+    "result": "FAILED",
+    "details": "('Key ID must be given to access Alpaca trade API', ' (env: APCA_API_KEY_ID)')",
+    "mode": "true"
+  }
+}
