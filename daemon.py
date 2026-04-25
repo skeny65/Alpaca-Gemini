@@ -23,15 +23,26 @@ os.makedirs(os.path.join(REPO_PATH, 'memory'), exist_ok=True)
 os.makedirs(os.path.join(REPO_PATH, 'skills'), exist_ok=True)
 
 # Cargar secrets (.env local)
-load_dotenv(os.path.join(REPO_PATH, '.env'))
+env_path = os.path.join(REPO_PATH, '.env')
+if not os.path.exists(env_path):
+    # Fallback automático: si .env no existe, intenta usar env.template
+    template_path = os.path.join(REPO_PATH, 'env.template')
+    if os.path.exists(template_path):
+        print(f"[{datetime.now()}] ℹ️ .env no encontrado, usando env.template como respaldo.")
+        env_path = template_path
+    else:
+        print(f"[{datetime.now()}] ℹ️ Buscando archivo .env en: {env_path}")
+
+load_dotenv(env_path)
 
 # Mapear llaves asegurando compatibilidad con la librería Alpaca
 ALPACA_API_KEY = os.getenv('ALPACA_API_KEY')
 ALPACA_SECRET_KEY = os.getenv('ALPACA_SECRET_KEY')
 
 if not ALPACA_API_KEY or not ALPACA_SECRET_KEY:
-    print(f"[{datetime.now()}] ⚠️ ERROR: No se detectaron las credenciales en el archivo .env")
+    print(f"[{datetime.now()}] ⚠️ ERROR: No se detectaron credenciales válidas en {env_path}")
     print(f"Asegúrate de que el archivo .env existe en {REPO_PATH} y tiene las llaves configuradas.")
+    sys.exit(1)
 else:
     # Inyectar explícitamente en el entorno para la librería
     os.environ['APCA_API_KEY_ID'] = ALPACA_API_KEY

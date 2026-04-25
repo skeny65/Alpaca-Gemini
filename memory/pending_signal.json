@@ -3,7 +3,7 @@
   "routine": "TEST_AUTO_EXECUTION",
   "asset": "AAPL",
   "action": "BUY",
-  "rationale": "Prueba end-to-end: Validando que el daemon detecte y ejecute la se\u00c3\u00b1al en la subcarpeta memory/.",
+  "rationale": "Ejecuci\u00f3n end-to-end: Corrigiendo carga de credenciales y forzando re-intento de compra.",
   "confidence": "HIGH",
   "source_urls": [],
   "status": "FAILED",
@@ -15,9 +15,9 @@
     "price_ok": true
   },
   "execution": {
-    "executed_at": "2026-04-25T11:06:58.003462",
+    "executed_at": "2026-04-25T11:19:49.212275",
     "result": "FAILED",
-    "details": "('Key ID must be given to access Alpaca trade API', ' (env: APCA_API_KEY_ID)')",
+    "details": "'charmap' codec can't decode byte 0x9d in position 282: character maps to <undefined>",
     "mode": "true"
   }
 }
