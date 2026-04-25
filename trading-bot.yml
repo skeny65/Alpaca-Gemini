@@ -1,0 +1,12 @@
+name: Trading Routine Check
+on:
+  schedule:
+    - cron: '30 13 * * 1-5' # 8:30 AM EST Lunes-Viernes
+  workflow_dispatch:
+
+jobs:
+  oracle_analysis:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
